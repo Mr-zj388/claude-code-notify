@@ -1,0 +1,3 @@
+node_modules/
+docs/ai-nav/
+.claude/settings.local.json

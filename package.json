@@ -1,0 +1,31 @@
+{
+  "name": "claude-hook-notify",
+  "version": "1.3.0",
+  "description": "🔔 Claude Code 任务完成桌面通知 — 一键安装，跨平台支持",
+  "main": "src/index.js",
+  "bin": {
+    "claude-hook-notify": "src/cli.js"
+  },
+  "scripts": {
+    "test": "node src/cli.js notify --event Stop --dry-run"
+  },
+  "keywords": [
+    "claude-code",
+    "hooks",
+    "notification",
+    "desktop-notification",
+    "osascript",
+    "notify-send",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "src/",
+    "vendor/",
+    "README.md"
+  ]
+}
