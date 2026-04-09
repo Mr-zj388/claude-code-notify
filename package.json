@@ -1,6 +1,6 @@
 {
   "name": "claude-hook-notify",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "🔔 Claude Code 任务完成桌面通知 — 一键安装，跨平台支持",
   "main": "src/index.js",
   "bin": {
@@ -18,8 +18,16 @@
     "notify-send",
     "cli"
   ],
-  "author": "",
+  "author": "Mr-zj388",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-zj388/claude-code-notify.git"
+  },
+  "homepage": "https://github.com/Mr-zj388/claude-code-notify#readme",
+  "bugs": {
+    "url": "https://github.com/Mr-zj388/claude-code-notify/issues"
+  },
   "engines": {
     "node": ">=16.0.0"
   },
