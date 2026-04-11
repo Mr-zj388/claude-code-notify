@@ -18,6 +18,9 @@ const HELP = `
     --local                  安装到当前项目 .claude/settings.json
     --events <事件列表>      要监听的事件，逗号分隔
                              默认: Stop,TaskCompleted,Notification
+    --pin <版本号>           锁定到指定版本，不自动更新
+                             默认: latest（每次 hook 触发使用最新版）
+                             示例: --pin 1.5.0
 
   notify 选项:
     --event <事件名>         事件类型 (Stop/TaskCompleted/Notification/...)
@@ -29,6 +32,7 @@ const HELP = `
   示例:
     npx claude-hook-notify setup
     npx claude-hook-notify setup --events Stop,TaskCompleted
+    npx claude-hook-notify setup --pin 1.5.0
     npx claude-hook-notify uninstall
 `;
 
@@ -70,7 +74,8 @@ async function main() {
     const events = args.events
       ? args.events.split(",").map((e) => e.trim())
       : ["Stop", "TaskCompleted", "Notification"];
-    await setup({ scope, events });
+    const pin = typeof args.pin === "string" ? args.pin : "latest";
+    await setup({ scope, events, pin });
     return;
   }
 

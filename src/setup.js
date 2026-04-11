@@ -16,8 +16,11 @@ const c = {
 
 /**
  * 生成 hooks 配置
+ *
+ * @param {string[]} events 要监听的事件
+ * @param {string} pin npm 版本标签（默认 "latest" 自动跟随最新版；传 "1.5.0" 等可锁定版本）
  */
-function generateHooksConfig(events) {
+function generateHooksConfig(events, pin = "latest") {
   const hooks = {};
   for (const event of events) {
     hooks[event] = [
@@ -26,7 +29,7 @@ function generateHooksConfig(events) {
         hooks: [
           {
             type: "command",
-            command: `npx --yes ${PKG_NAME}@latest notify --event ${event}`,
+            command: `npx --yes ${PKG_NAME}@${pin} notify --event ${event}`,
             timeout: 10,
           },
         ],
@@ -111,7 +114,7 @@ function checkDependencies() {
 /**
  * 安装 hooks 配置
  */
-async function setup({ scope = "global", events = ["Stop", "TaskCompleted", "Notification"] }) {
+async function setup({ scope = "global", events = ["Stop", "TaskCompleted", "Notification"], pin = "latest" }) {
   const settingsPath = getSettingsPath(scope);
   const scopeLabel = scope === "global" ? "全局" : "项目";
 
@@ -146,7 +149,7 @@ async function setup({ scope = "global", events = ["Stop", "TaskCompleted", "Not
   }
 
   // 生成新的 hooks 配置
-  const newHooks = generateHooksConfig(events);
+  const newHooks = generateHooksConfig(events, pin);
 
   // 合并配置（只覆盖 claude-hook-notify 相关的 hook，保留其他 hook）
   for (const [event, hookConfigs] of Object.entries(newHooks)) {
@@ -171,6 +174,11 @@ async function setup({ scope = "global", events = ["Stop", "TaskCompleted", "Not
   console.log(
     `  ${c.green("✓")}  已写入${scopeLabel}配置: ${c.cyan(settingsPath)}`
   );
+  if (pin !== "latest") {
+    console.log(
+      `  ${c.green("✓")}  已锁定版本: ${c.cyan(`${PKG_NAME}@${pin}`)} ${c.dim("(不会自动更新)")}`
+    );
+  }
   console.log();
   console.log(`  ${c.bold("已注册的事件:")}`);
   for (const event of events) {

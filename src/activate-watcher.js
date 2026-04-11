@@ -22,7 +22,7 @@
  *   }
  */
 
-const { spawn } = require("child_process");
+const { spawn, execFileSync } = require("child_process");
 
 // 120 秒超时自动退出，防僵尸进程
 const config = parseConfig();

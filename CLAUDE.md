@@ -27,6 +27,7 @@ npx claude-hook-notify uninstall                 # 卸载 hooks 配置
 - 禁止在 `sendNotification` 中使用 `execSync` 执行用户可控的字符串拼接命令 — 已使用 `execFileSync` + 参数数组防止命令注入
 - 禁止在合并 hooks 配置时覆盖用户已有的非本工具 hook — 必须仅替换包含 `claude-hook-notify` 的条目
 - 禁止硬编码平台检测结果 — 必须通过 `os.platform()` 动态判断
+- 禁止通过累加 `cache_creation_input_tokens` 计算本轮 token 消耗 — 缓存失效重建时会虚高，必须使用 context-delta 口径（见 `docs/ai-nav/src/notify.nav.md`）
 
 ## 代码规范
 
@@ -47,7 +48,7 @@ npx claude-hook-notify uninstall                 # 卸载 hooks 配置
 |------|------|------|
 | 入口 | `src/index.js` | 导出公共 API |
 | CLI | `src/cli.js` | 命令行解析与分发 |
-| 通知 | `src/notify.js` | 跨平台通知发送、事件配置、上下文提取 |
+| 通知 | `src/notify.js` | 跨平台通知发送、事件配置、上下文提取、token 消耗统计 |
 | 配置 | `src/setup.js` | hooks 配置的安装与卸载 |
 | 终端检测 | `src/activate.js` | 终端类型检测与窗口激活命令生成 |
 | 点击监听 | `src/activate-watcher.js` | 后台脚本，监听通知点击后激活终端（Linux） |
@@ -56,4 +57,5 @@ npx claude-hook-notify uninstall                 # 卸载 hooks 配置
 
 - `StopFailure` 不是 Claude Code 官方支持的 hook 事件，默认不注册
 - Windows 使用 `vendor/snoretoast/` 下的 SnoreToast 发送原生 Toast 通知，仅支持弹窗显示，不支持点击后激活终端窗口（ConPTY 机制限制）
+- Windows 通知的 token 消耗拼入 `-appID` 顶部栏（动态 appID 会在系统通知设置里登记多条记录，属已知副作用）
 - hook 输入通过 stdin 以 JSON 格式传入，在非 TTY 模式下读取
